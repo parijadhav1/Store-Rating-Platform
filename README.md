@@ -1,85 +1,248 @@
 # Store Rating Platform
 
-Full-stack solution for the intern coding challenge. It uses React for the frontend, Express for the backend, and PostgreSQL for persistence.
+A full-stack web application built as part of the Full Stack Developer Coding Challenge. The application allows users to register, log in, rate stores, and provides separate dashboards for Admin, User, and Store Owner roles.
+
+---
 
 ## Features
 
-- Single login system with `ADMIN`, `USER`, and `OWNER` roles.
-- Normal users can sign up, search stores by name/address, submit ratings from 1 to 5, and update previous ratings.
-- Admins can create users and stores, view dashboard totals, filter/sort users and stores, and see owner ratings.
-- Store owners can view their store average rating and the users who submitted ratings.
-- Shared backend validations for name, email, address, password, role, and rating constraints.
+### User
+
+* Sign up and log in
+* Search stores by name or address
+* View store ratings
+* Submit ratings (1–5)
+* Update previously submitted ratings
+* Change password
+
+### Admin
+
+* Log in securely
+* View dashboard statistics
+* Create and manage users
+* Create and manage stores
+* View all registered users and stores
+* Filter and sort users and stores
+
+### Store Owner
+
+* Log in securely
+* View assigned store details
+* View average store rating
+* View ratings submitted by users
+
+---
+
+## Tech Stack
+
+### Frontend
+
+* React
+* Vite
+* JavaScript
+* CSS
+
+### Backend
+
+* Node.js
+* Express.js
+
+### Database
+
+* PostgreSQL
+
+---
 
 ## Project Structure
 
-- `backend/`: Express API, PostgreSQL schema, seed script, auth, role-based routes.
-- `frontend/`: Vite + React dashboard UI.
-- `backend/src/schema.sql`: database tables, constraints, indexes, and relationships.
-
-## Setup
-
-1. Create a PostgreSQL database named `store_rating_platform`.
-
-   With Docker, you can start one with:
-
-```bash
-docker compose up -d
+```
+Store Rating Platform/
+│
+├── backend/
+│   ├── src/
+│   ├── test/
+│   ├── package.json
+│   └── .env
+│
+├── frontend/
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
+│
+├── docker-compose.yml
+└── README.md
 ```
 
-2. Copy the backend env file:
+---
+
+## Prerequisites
+
+Make sure the following are installed on your system:
+
+* Node.js (v18 or later recommended)
+* npm
+* PostgreSQL
+
+---
+
+## Installation
+
+### 1. Clone the repository
 
 ```bash
-cp backend/.env.example backend/.env
+git clone <your-github-repository-url>
 ```
 
-3. Update `backend/.env` if your PostgreSQL user/password is different.
-4. Install dependencies:
+```bash
+cd Store-Rating-Platform
+```
+
+---
+
+### 2. Install dependencies
+
+Backend
 
 ```bash
+cd backend
 npm install
-npm run install:all
 ```
 
-5. Seed the database:
+Frontend
 
 ```bash
-npm run seed
+cd ../frontend
+npm install
 ```
 
-6. Start both apps:
+---
+
+### 3. Configure Environment Variables
+
+Create a file named `.env` inside the **backend** folder.
+
+Example:
+
+```env
+PORT=4000
+DATABASE_URL=postgres://postgres:postgres@localhost:5432/store_rating_platform
+JWT_SECRET=your-secret-key
+FRONTEND_ORIGIN=http://localhost:5174
+```
+
+---
+
+### 4. Create the Database
+
+Create a PostgreSQL database named:
+
+```
+store_rating_platform
+```
+
+Run the database schema and seed files if required.
+
+---
+
+### 5. Start the Backend
 
 ```bash
+cd backend
 npm run dev
 ```
 
-Frontend: `http://localhost:5173`
-Backend: `http://localhost:4000/api`
+Backend runs on:
+
+```
+http://localhost:4000
+```
+
+---
+
+### 6. Start the Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+Frontend runs on:
+
+```
+http://localhost:5174
+```
+
+---
 
 ## Demo Accounts
 
-- Admin: `admin@stores.test` / `Admin@123`
-- User: `user@stores.test` / `User@123`
-- Owner: `owner@stores.test` / `Owner@123`
+### Admin
 
-## Interview Explanation
+Email
 
-I built the app around three clear layers. The React frontend handles screens for each role after login. The Express API owns business rules, authentication, validation, filtering, sorting, and authorization. PostgreSQL stores normalized users, stores, and ratings.
-
-The database has three main tables:
-
-- `users`: stores login identity, hashed password, profile fields, and role.
-- `stores`: stores registered store details and optionally links to a store owner.
-- `ratings`: stores each user's rating for a store with a unique `(user_id, store_id)` constraint, so the same user can update a rating instead of creating duplicates.
-
-Authentication uses JWTs. On login/signup, the backend returns a token containing the user id and role. Protected routes use middleware to verify the token, then role middleware limits access to admin, user, or owner endpoints.
-
-Ratings use an upsert query. When a normal user rates a store, the backend inserts the rating. If that user already rated the same store, PostgreSQL updates the existing row. Average ratings are calculated with SQL aggregation, which keeps the source of truth in the database.
-
-Validation is enforced on the backend because frontend validation alone can be bypassed. The backend checks the challenge constraints: name length, address length, email format, password complexity, role values, and 1-5 ratings.
-
-## Useful Commands
-
-```bash
-npm run test --prefix backend
-npm run build --prefix frontend
 ```
+admin@stores.test
+```
+
+Password
+
+```
+Admin@123
+```
+
+---
+
+### User
+
+Email
+
+```
+user@stores.test
+```
+
+Password
+
+```
+User@123
+```
+
+---
+
+### Store Owner
+
+Email
+
+```
+owner@stores.test
+```
+
+Password
+
+```
+Owner@123
+```
+
+---
+
+## API
+
+Base URL
+
+```
+http://localhost:4000/api
+```
+---
+
+## Author
+
+Parineeta Jadhav
+
+---
+
+## Notes
+
+* Role-based authentication is implemented for Admin, User, and Store Owner.
+* Passwords are securely stored using hashing.
+* JWT is used for user authentication.
+* Users can update their existing ratings instead of creating duplicate entries.
+* Store ratings are calculated automatically based on user submissions.
