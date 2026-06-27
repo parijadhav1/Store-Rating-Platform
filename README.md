@@ -90,7 +90,7 @@ Make sure the following are installed on your system:
 ### 1. Clone the repository
 
 ```bash
-git clone <your-github-repository-url>
+git clone https://github.com/parijadhav1/Store-Rating-Platform
 ```
 
 ```bash
